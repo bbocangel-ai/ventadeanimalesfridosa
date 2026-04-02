@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Flauta — Reporte Venta FRIDOSA</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+@keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+@keyframes slideIn { from { opacity:0; transform:translateX(-12px); } to { opacity:1; transform:translateX(0); } }
+@keyframes barGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes countUp { from { opacity:0.3; } to { opacity:1; } }
+
+:root {
+  --cream: #F7F4EF;
+  --sand: #EDE8DF;
+  --stone: #D4CEC4;
+  --bark: #8C8378;
+  --earth: #5C554C;
+  --charcoal: #2E2A26;
+  --ink: #1A1714;
+  --forest: #2D5A3D;
+  --forest-light: #3A7A50;
+  --forest-pale: #E8F0EB;
+  --gold: #B8923F;
+  --gold-light: #D4AD5A;
+  --gold-pale: #F5EFE0;
+  --rust: #B85A3F;
+  --slate: #4A6670;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--cream);
+  color: var(--charcoal);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- HEADER ---- */
+.hero {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 3rem 2.5rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -20%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(45,90,61,0.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.hero-inner { max-width: 1260px; margin: 0 auto; position: relative; z-index: 1; }
+.hero-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 0.6rem;
+  animation: slideIn 0.6s ease both;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  animation: fadeUp 0.7s ease both;
+}
+.hero h1 span { color: var(--gold-light); }
+.hero-meta {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1.2rem;
+  font-size: 0.85rem;
+  color: var(--stone);
+  animation: fadeUp 0.7s 0.15s ease both;
+}
+.hero-meta strong { color: var(--cream); font-weight: 600; }
+.hero-divider {
+  width: 48px; height: 2px;
+  background: var(--gold);
+  margin-top: 1.5rem;
+  animation: slideIn 0.8s 0.3s ease both;
+}
+
+/* ---- LAYOUT ---- */
+.page { max-width: 1260px; margin: 0 auto; padding: 2rem 2.5rem 4rem; }
+
+/* ---- KPI STRIP ---- */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+  margin-top: -1.5rem;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+}
+@media(max-width:900px) { .kpi-strip { grid-template-columns: repeat(3,1fr); } }
+@media(max-width:560px) { .kpi-strip { grid-template-columns: repeat(2,1fr); } }
+.kpi {
+  padding: 1.5rem 1.2rem;
+  text-align: center;
+  position: relative;
+  animation: fadeUp 0.5s ease both;
+}
+.kpi:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 20%; height: 60%;
+  width: 1px;
+  background: var(--sand);
+}
+.kpi-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+  animation: countUp 0.8s ease both;
+}
+.kpi-num small { font-family: 'Outfit', sans-serif; font-size: 0.7rem; font-weight: 500; color: var(--bark); margin-left: 2px; }
+.kpi-tag {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bark);
+  margin-top: 0.3rem;
+}
+
+/* ---- SECTIONS ---- */
+.section { margin-top: 3rem; }
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.section-head h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.section-head .line {
+  flex: 1;
+  height: 1px;
+  background: var(--stone);
+  opacity: 0.4;
+}
+
+/* ---- PROVIDER CARDS ---- */
+.prov-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.2rem;
+}
+.prov-card {
+  background: white;
+  border-radius: 14px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 6px 20px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: fadeUp 0.5s ease both;
+}
+.prov-card:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.06), 0 12px 32px rgba(0,0,0,0.08); }
+.prov-card-top {
+  padding: 1.3rem 1.4rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.prov-card:nth-child(1) .prov-card-top { border-top: 3px solid var(--forest); }
+.prov-card:nth-child(2) .prov-card-top { border-top: 3px solid var(--gold); }
+.prov-card:nth-child(3) .prov-card-top { border-top: 3px solid var(--slate); }
+.prov-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.prov-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.25rem 0.7rem;
+  border-radius: 99px;
+  background: var(--forest-pale);
+  color: var(--forest);
+}
+.prov-date {
+  padding: 0 1.4rem;
+  font-size: 0.75rem;
+  color: var(--bark);
+  margin-bottom: 0.8rem;
+}
+.prov-date strong { color: var(--earth); }
+.prov-stats {
+  padding: 0 1.4rem 1.3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem 1.5rem;
+}
+.prov-stat {}
+.prov-stat-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bark); }
+.prov-stat-value { font-size: 1.05rem; font-weight: 600; color: var(--charcoal); margin-top: 0.1rem; }
+.prov-stat-value.accent { color: var(--forest); }
+
+.prov-gdp-bar {
+  height: 4px;
+  background: var(--sand);
+  border-radius: 0 0 14px 14px;
+  overflow: hidden;
+}
+.prov-gdp-fill {
+  height: 100%;
+  border-radius: 2px;
+  transform-origin: left;
+  animation: barGrow 1s 0.3s ease both;
+}
+.prov-card:nth-child(1) .prov-gdp-fill { background: var(--forest); }
+.prov-card:nth-child(2) .prov-gdp-fill { background: var(--gold); }
+.prov-card:nth-child(3) .prov-gdp-fill { background: var(--slate); }
+
+/* ---- CHARTS ---- */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+}
+@media(max-width:900px) { .charts-row { grid-template-columns: 1fr; } }
+.chart-box {
+  background: white;
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 6px 20px rgba(0,0,0,0.05);
+  animation: fadeUp 0.6s ease both;
+}
+.chart-box h3 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bark);
+  margin-bottom: 1.2rem;
+}
+.chart-box canvas { max-height: 300px; }
+
+/* ---- TABLE ---- */
+.tbl-wrap {
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 6px 20px rgba(0,0,0,0.05);
+  animation: fadeUp 0.6s ease both;
+}
+table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+thead { background: var(--ink); }
+th {
+  padding: 0.9rem 0.8rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stone);
+  white-space: nowrap;
+}
+td {
+  padding: 0.7rem 0.8rem;
+  border-bottom: 1px solid var(--sand);
+  white-space: nowrap;
+  color: var(--charcoal);
+}
+tbody tr:hover td { background: var(--forest-pale); }
+tbody tr:last-child td { border-bottom: none; }
+.r { text-align: right; font-variant-numeric: tabular-nums; }
+.strong { font-weight: 700; }
+.green { color: var(--forest); font-weight: 700; }
+.gdp-cell { display: flex; align-items: center; gap: 0.5rem; justify-content: flex-end; }
+.gdp-mini-bar { width: 60px; height: 5px; background: var(--sand); border-radius: 3px; overflow: hidden; }
+.gdp-mini-fill { height: 100%; background: var(--forest); border-radius: 3px; transform-origin: left; animation: barGrow 0.8s 0.5s ease both; }
+
+/* ---- FOOTER ---- */
+.footer {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--stone);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--bark);
+}
+.footer-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Reporte de Gesti&oacute;n Ganadera</div>
+    <h1>Venta <span>FRIDOSA</span></h1>
+    <div class="hero-meta">
+      <div><strong>200</strong> cabezas vendidas</div>
+      <div>Fecha de venta: <strong>01 abril 2026</strong></div>
+      <div>Estancia: <strong>La Flauta</strong></div>
+    </div>
+    <div class="hero-divider"></div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- KPI Strip -->
+  <div class="kpi-strip">
+    <div class="kpi" style="animation-delay:0.1s"><div class="kpi-num">200<small>cab</small></div><div class="kpi-tag">Vendidos</div></div>
+    <div class="kpi" style="animation-delay:0.15s"><div class="kpi-num">36,464<small>kg</small></div><div class="kpi-tag">Kg Producidos</div></div>
+    <div class="kpi" style="animation-delay:0.2s"><div class="kpi-num">0.518<small>kg/d</small></div><div class="kpi-tag">GDP General</div></div>
+    <div class="kpi" style="animation-delay:0.25s"><div class="kpi-num">350<small>d&iacute;as</small></div><div class="kpi-tag">Prom en Campo</div></div>
+    <div class="kpi" style="animation-delay:0.3s"><div class="kpi-num">216.9<small>kg</small></div><div class="kpi-tag">Peso Entrada</div></div>
+    <div class="kpi" style="animation-delay:0.35s"><div class="kpi-num">399.2<small>kg</small></div><div class="kpi-tag">Peso Salida</div></div>
+  </div>
+
+  <!-- Provider Cards -->
+  <div class="section">
+    <div class="section-head"><h2>Proveedores</h2><div class="line"></div></div>
+    <div class="prov-grid" id="prov-grid"></div>
+  </div>
+
+  <!-- Charts -->
+  <div class="section">
+    <div class="section-head"><h2>An&aacute;lisis Comparativo</h2><div class="line"></div></div>
+    <div class="charts-row" style="margin-bottom:1.2rem">
+      <div class="chart-box"><h3>GDP Promedio por Proveedor</h3><canvas id="c-gdp"></canvas></div>
+      <div class="chart-box"><h3>Peso Entrada vs Salida</h3><canvas id="c-weight"></canvas></div>
+    </div>
+    <div class="charts-row">
+      <div class="chart-box"><h3>D&iacute;as en Campo</h3><canvas id="c-dias"></canvas></div>
+      <div class="chart-box"><h3>Kg Producidos</h3><canvas id="c-kg"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="section">
+    <div class="section-head"><h2>Tabla Comparativa</h2><div class="line"></div></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>Proveedor</th><th class="r">Cab</th><th>Ingreso</th>
+          <th class="r">P. Entrada</th><th class="r">P. Salida</th>
+          <th class="r">D&iacute;as</th><th class="r">Gan/Cab</th>
+          <th class="r">GDP</th><th class="r" style="width:90px"></th>
+          <th class="r">Kg Total</th>
+        </tr></thead>
+        <tbody id="t-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Top Animals -->
+  <div class="section">
+    <div class="section-head"><h2>Top 30 Animales por GDP</h2><div class="line"></div></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>ID</th><th>Proveedor</th><th>Sexo</th>
+          <th class="r">P. Entrada</th><th class="r">P. Salida</th>
+          <th class="r">D&iacute;as</th><th class="r">Ganancia</th>
+          <th class="r">GDP</th><th class="r">Pesajes</th>
+        </tr></thead>
+        <tbody id="a-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-logo">La Flauta</div>
+    <div>Generado: 02 abril 2026</div>
+  </div>
+
+</div>
+
+<script>
+const P = [
+  {n:"ABELARDO SJ VAQ", cab:110, ing:"21 feb 2025", pe:175.4, ps:396.2, dias:404, gan:220.9, gdp:0.547, gdpM:0.545, kg:24295},
+  {n:"RJCESPEDES VAQ", cab:53, ing:"29 mar 2025", pe:242.4, ps:402.8, dias:355, gan:131.9, gdp:0.472, gdpM:0.455, kg:6992},
+  {n:"NOGALES VAQUILLAS", cab:36, ing:"19 jun 2025", pe:262.9, ps:403.9, dias:286, gan:141.0, gdp:0.493, gdpM:0.479, kg:5075},
+];
+
+const A = [
+  {id:13640,p:"NOGALES",s:"F",pe:258,ps:461,d:286,g:203,gdp:0.710,n:4},
+  {id:12978,p:"ABELARDO",s:"F",pe:149,ps:433,d:403,g:284,gdp:0.705,n:7},
+  {id:12999,p:"ABELARDO",s:"F",pe:152,ps:440,d:432,g:288,gdp:0.667,n:8},
+  {id:13645,p:"NOGALES",s:"F",pe:222,ps:411,d:286,g:189,gdp:0.661,n:4},
+  {id:13648,p:"NOGALES",s:"F",pe:240,ps:424,d:286,g:184,gdp:0.643,n:4},
+  {id:13647,p:"NOGALES",s:"F",pe:209,ps:395,d:286,g:186,gdp:0.650,n:4},
+  {id:12992,p:"ABELARDO",s:"F",pe:158,ps:430,d:432,g:272,gdp:0.630,n:8},
+  {id:15284,p:"RJCESPEDES",s:"F",pe:328,ps:416,d:131,g:88,gdp:0.672,n:3},
+  {id:15186,p:"RJCESPEDES",s:"F",pe:316,ps:404,d:140,g:88,gdp:0.629,n:3},
+  {id:13655,p:"NOGALES",s:"F",pe:274,ps:452,d:286,g:178,gdp:0.622,n:4},
+  {id:13006,p:"ABELARDO",s:"F",pe:172,ps:439,d:432,g:267,gdp:0.618,n:7},
+  {id:13007,p:"ABELARDO",s:"F",pe:155.5,ps:423,d:432,g:267.5,gdp:0.619,n:8},
+  {id:15139,p:"RJCESPEDES",s:"F",pe:295,ps:395,d:162,g:100,gdp:0.617,n:3},
+  {id:13001,p:"ABELARDO",s:"F",pe:151.5,ps:418,d:432,g:266.5,gdp:0.617,n:8},
+  {id:12979,p:"ABELARDO",s:"F",pe:153,ps:417,d:432,g:264,gdp:0.611,n:8},
+  {id:12984,p:"ABELARDO",s:"F",pe:166.5,ps:430,d:432,g:263.5,gdp:0.610,n:8},
+  {id:13004,p:"ABELARDO",s:"F",pe:160,ps:419,d:432,g:259,gdp:0.599,n:8},
+  {id:15183,p:"RJCESPEDES",s:"F",pe:280,ps:402,d:213,g:122,gdp:0.573,n:4},
+  {id:12991,p:"ABELARDO",s:"F",pe:155,ps:411,d:432,g:256,gdp:0.593,n:8},
+  {id:12973,p:"ABELARDO",s:"F",pe:168,ps:424,d:432,g:256,gdp:0.593,n:8},
+  {id:13000,p:"ABELARDO",s:"F",pe:147,ps:401,d:432,g:254,gdp:0.588,n:8},
+  {id:12986,p:"ABELARDO",s:"F",pe:149,ps:402,d:432,g:253,gdp:0.586,n:8},
+  {id:12989,p:"ABELARDO",s:"F",pe:161,ps:414,d:432,g:253,gdp:0.586,n:8},
+  {id:12975,p:"ABELARDO",s:"F",pe:166,ps:418,d:432,g:252,gdp:0.583,n:8},
+  {id:12990,p:"ABELARDO",s:"F",pe:165,ps:417,d:432,g:252,gdp:0.583,n:8},
+  {id:13028,p:"ABELARDO",s:"F",pe:149,ps:381,d:403,g:232,gdp:0.576,n:7},
+  {id:12994,p:"ABELARDO",s:"F",pe:181.5,ps:428,d:432,g:246.5,gdp:0.571,n:8},
+  {id:14455,p:"RJCESPEDES",s:"F",pe:189,ps:392,d:362,g:203,gdp:0.561,n:6},
+  {id:14456,p:"RJCESPEDES",s:"F",pe:186.5,ps:390,d:362,g:203.5,gdp:0.562,n:6},
+  {id:13014,p:"ABELARDO",s:"F",pe:171,ps:417,d:432,g:246,gdp:0.569,n:7},
+];
+
+// Provider cards
+const maxGdp = Math.max(...P.map(p=>p.gdp));
+const grid = document.getElementById('prov-grid');
+P.forEach((p,i) => {
+  const pct = (p.gdp/maxGdp*100).toFixed(0);
+  grid.innerHTML += `
+  <div class="prov-card" style="animation-delay:${i*0.1}s">
+    <div class="prov-card-top">
+      <div class="prov-name">${p.n}</div>
+      <div class="prov-badge">${p.cab} cab</div>
+    </div>
+    <div class="prov-date">Ingreso: <strong>${p.ing}</strong></div>
+    <div class="prov-stats">
+      <div class="prov-stat"><div class="prov-stat-label">Peso Entrada</div><div class="prov-stat-value">${p.pe.toFixed(1)} kg</div></div>
+      <div class="prov-stat"><div class="prov-stat-label">Peso Salida</div><div class="prov-stat-value">${p.ps.toFixed(1)} kg</div></div>
+      <div class="prov-stat"><div class="prov-stat-label">D\u00edas en Campo</div><div class="prov-stat-value">${p.dias}</div></div>
+      <div class="prov-stat"><div class="prov-stat-label">Ganancia / Cab</div><div class="prov-stat-value">${p.gan.toFixed(1)} kg</div></div>
+      <div class="prov-stat"><div class="prov-stat-label">GDP Promedio</div><div class="prov-stat-value accent">${p.gdp.toFixed(3)} kg/d</div></div>
+      <div class="prov-stat"><div class="prov-stat-label">Kg Totales</div><div class="prov-stat-value strong">${p.kg.toLocaleString('es')}</div></div>
+    </div>
+    <div class="prov-gdp-bar"><div class="prov-gdp-fill" style="width:${pct}%"></div></div>
+  </div>`;
+});
+
+// Table
+const tb = document.getElementById('t-body');
+P.forEach(p => {
+  const pct = (p.gdp/maxGdp*100).toFixed(0);
+  tb.innerHTML += `<tr>
+    <td class="strong">${p.n}</td><td class="r">${p.cab}</td><td>${p.ing}</td>
+    <td class="r">${p.pe.toFixed(1)}</td><td class="r">${p.ps.toFixed(1)}</td>
+    <td class="r">${p.dias}</td><td class="r">${p.gan.toFixed(1)}</td>
+    <td class="r green">${p.gdp.toFixed(3)}</td>
+    <td class="r"><div class="gdp-cell"><div class="gdp-mini-bar"><div class="gdp-mini-fill" style="width:${pct}%"></div></div></div></td>
+    <td class="r strong">${p.kg.toLocaleString('es')}</td>
+  </tr>`;
+});
+
+// Animals table
+const ab = document.getElementById('a-body');
+A.sort((a,b)=>b.gdp-a.gdp);
+A.forEach(a => {
+  ab.innerHTML += `<tr>
+    <td>${a.id}</td><td>${a.p}</td><td>${a.s}</td>
+    <td class="r">${a.pe}</td><td class="r">${a.ps}</td>
+    <td class="r">${a.d}</td><td class="r">${a.g}</td>
+    <td class="r green">${a.gdp.toFixed(3)}</td><td class="r">${a.n}</td>
+  </tr>`;
+});
+
+// Charts
+Chart.defaults.color = '#8C8378';
+Chart.defaults.borderColor = '#EDE8DF';
+Chart.defaults.font.family = "'Outfit', sans-serif";
+const names = P.map(p=>p.n);
+const cols = ['#2D5A3D','#B8923F','#4A6670'];
+
+new Chart(document.getElementById('c-gdp'), {
+  type:'bar',
+  data:{labels:names, datasets:[{data:P.map(p=>p.gdp), backgroundColor:cols.map(c=>c+'cc'), borderColor:cols, borderWidth:1.5, borderRadius:8}]},
+  options:{indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{backgroundColor:'#1A1714',titleFont:{family:"'Outfit'"},bodyFont:{family:"'Outfit'"}, callbacks:{label:c=>c.raw.toFixed(3)+' kg/d\u00eda'}}}, scales:{x:{title:{display:true,text:'kg/d\u00eda',font:{size:11}},grid:{color:'#EDE8DF'}},y:{grid:{display:false},ticks:{font:{weight:600}}}}}
+});
+
+new Chart(document.getElementById('c-weight'), {
+  type:'bar',
+  data:{labels:names, datasets:[
+    {label:'Entrada',data:P.map(p=>p.pe),backgroundColor:'#4A667088',borderColor:'#4A6670',borderWidth:1.5,borderRadius:6},
+    {label:'Salida',data:P.map(p=>p.ps),backgroundColor:'#2D5A3D88',borderColor:'#2D5A3D',borderWidth:1.5,borderRadius:6}
+  ]},
+  options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{usePointStyle:true,pointStyle:'circle',padding:16}},tooltip:{backgroundColor:'#1A1714'}}, scales:{x:{grid:{display:false}},y:{title:{display:true,text:'kg',font:{size:11}},grid:{color:'#EDE8DF'}}}}
+});
+
+new Chart(document.getElementById('c-dias'), {
+  type:'bar',
+  data:{labels:names, datasets:[{data:P.map(p=>p.dias),backgroundColor:cols.map(c=>c+'88'),borderColor:cols,borderWidth:1.5,borderRadius:8}]},
+  options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:{backgroundColor:'#1A1714',callbacks:{label:c=>c.raw+' d\u00edas'}}}, scales:{x:{grid:{display:false}},y:{title:{display:true,text:'d\u00edas',font:{size:11}},grid:{color:'#EDE8DF'}}}}
+});
+
+new Chart(document.getElementById('c-kg'), {
+  type:'doughnut',
+  data:{labels:names, datasets:[{data:P.map(p=>p.kg),backgroundColor:cols.map(c=>c+'dd'),borderColor:'#fff',borderWidth:3, hoverOffset:8}]},
+  options:{responsive:true, maintainAspectRatio:false, cutout:'55%', plugins:{legend:{position:'bottom',labels:{padding:20,usePointStyle:true,pointStyle:'circle',font:{size:12}}},tooltip:{backgroundColor:'#1A1714',callbacks:{label:c=>c.label+': '+c.raw.toLocaleString('es')+' kg'}}}}
+});
+</script>
+</body>
+</html>
